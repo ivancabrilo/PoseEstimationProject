@@ -1,6 +1,6 @@
 Pose Estimation and Landmark Processing
 
-![Landmarks detection with MediaPipe and OpenCV](readme.gif)
+![Landmarks detection with MediaPipe and OpenCV](https://github.com/ivancabrilo/PoseEstimationProject/blob/main/readme.gif?raw=true)
 
 This project demonstrates how to use MediaPipe's Pose module with OpenCV to process pose landmarks and make a program that shows the overreliance on certain limbs or joints during your climbs. It processes video frames, detects body landmarks, excludes specific landmarks (e.g., face landmarks), computes averages over frames, and saves the data in a JSON file.
 
