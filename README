@@ -1,5 +1,7 @@
 Pose Estimation and Landmark Processing
 
+![Landmarks detecion with MediaPipe and OpenCV](readme.gif)
+
 This project demonstrates how to use MediaPipe's Pose module with OpenCV to process pose landmarks and make a program that shows the overreliance on certain limbs or joints during your climbs. It processes video frames, detects body landmarks, excludes specific landmarks (e.g., face landmarks), computes averages over frames, and saves the data in a JSON file.
 
 These numbers represent IDs for each part of the body, taken from pose.py which is part of mediapipe library:
@@ -77,5 +79,3 @@ frame_skip = 2
 
 Excluded Landmarks:
 Update excluded_landmarks to filter out unwanted pose landmarks (default: face landmarks, indices 0–10).
-
-
