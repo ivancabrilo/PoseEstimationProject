@@ -78,4 +78,4 @@ frame_skip = 2
 Excluded Landmarks:
 Update excluded_landmarks to filter out unwanted pose landmarks (default: face landmarks, indices 0–10).
 
-<video controls src="readme.mp4" title="Title"></video>
+
