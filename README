@@ -1,0 +1,81 @@
+Pose Estimation and Landmark Processing
+
+This project demonstrates how to use MediaPipe's Pose module with OpenCV to process pose landmarks and make a program that shows the overreliance on certain limbs or joints during your climbs. It processes video frames, detects body landmarks, excludes specific landmarks (e.g., face landmarks), computes averages over frames, and saves the data in a JSON file.
+
+These numbers represent IDs for each part of the body, taken from pose.py which is part of mediapipe library:
+
+NOSE = 0
+LEFT_EYE_INNER = 1
+LEFT_EYE = 2
+LEFT_EYE_OUTER = 3
+RIGHT_EYE_INNER = 4
+RIGHT_EYE = 5
+RIGHT_EYE_OUTER = 6
+LEFT_EAR = 7
+RIGHT_EAR = 8
+MOUTH_LEFT = 9
+MOUTH_RIGHT = 10
+LEFT_SHOULDER = 11
+RIGHT_SHOULDER = 12
+LEFT_ELBOW = 13
+RIGHT_ELBOW = 14
+LEFT_WRIST = 15
+RIGHT_WRIST = 16
+LEFT_PINKY = 17
+RIGHT_PINKY = 18
+LEFT_INDEX = 19
+RIGHT_INDEX = 20
+LEFT_THUMB = 21
+RIGHT_THUMB = 22
+LEFT_HIP = 23
+RIGHT_HIP = 24
+LEFT_KNEE = 25
+RIGHT_KNEE = 26
+LEFT_ANKLE = 27
+RIGHT_ANKLE = 28
+LEFT_HEEL = 29
+RIGHT_HEEL = 30
+LEFT_FOOT_INDEX = 31
+RIGHT_FOOT_INDEX = 32
+
+Since I do not particularly care about definite coordianates for each id that makes up the hand (especially because sometimes parts of hands are excluded due to low visibility in each frame), I chose to take the average of visible parts of hands and take it as one coordiante per frame. This way I make up for missing data.
+
+In this example you can see that visibility for IDs: 16,17, and 18 was below the treshold (id.value < 0.65), so I need to average over what i have, so I get the rough coordiantes of both hands
+{
+"id": 15,
+"x": 0.23376888781785965,
+"y": 0.9412336409091949,
+"z": -0.10708843609318137,
+"visibility": 0.6834443390369416
+},
+{
+"id": 19,
+"x": 0.24429382383823395,
+"y": 0.9607700705528259,
+"z": -0.19701384007930756,
+"visibility": 0.6510405540466309
+},
+
+Features
+Pose Detection: Detect body pose landmarks using MediaPipe.
+Landmark Filtering: Exclude low-visibility landmarks and specific unwanted landmarks (e.g., face landmarks).
+Frame Skipping: Process every Nth frame for efficiency.
+Landmark Averaging: Smooth landmark positions by averaging data over multiple frames.
+FPS Display: Show real-time frame processing speed (FPS) on video.
+JSON Export: Save processed landmarks into a structured JSON file for further analysis.
+Prerequisites
+Required Libraries
+Ensure you have the following Python libraries installed:
+
+OpenCV: For video processing
+MediaPipe: For pose estimation
+JSON: For data serialization
+
+Frame Skipping:
+Modify frame_skip to process every nth frame (default: 2).
+frame_skip = 2
+
+Excluded Landmarks:
+Update excluded_landmarks to filter out unwanted pose landmarks (default: face landmarks, indices 0–10).
+
+<video controls src="readme.mp4" title="Title"></video>
