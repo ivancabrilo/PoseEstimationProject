@@ -1,81 +1,108 @@
-Pose Estimation and Landmark Processing
+# Pose Estimation and Landmark Processing
 
 ![Landmarks detection with MediaPipe and OpenCV](https://github.com/ivancabrilo/PoseEstimationProject/blob/main/readme.gif?raw=true)
 
-This project demonstrates how to use MediaPipe's Pose module with OpenCV to process pose landmarks and make a program that shows the overreliance on certain limbs or joints during your climbs. It processes video frames, detects body landmarks, excludes specific landmarks (e.g., face landmarks), computes averages over frames, and saves the data in a JSON file.
+This project demonstrates how to use **MediaPipe's Pose module** with **OpenCV** to process pose landmarks and analyze overreliance on certain limbs or joints during climbing. It processes video frames, detects body landmarks, excludes specific landmarks (e.g., face landmarks), computes averages over frames, and saves the data in a JSON file.
 
-These numbers represent IDs for each part of the body, taken from pose.py which is part of mediapipe library:
+---
 
-NOSE = 0
-LEFT_EYE_INNER = 1
-LEFT_EYE = 2
-LEFT_EYE_OUTER = 3
-RIGHT_EYE_INNER = 4
-RIGHT_EYE = 5
-RIGHT_EYE_OUTER = 6
-LEFT_EAR = 7
-RIGHT_EAR = 8
-MOUTH_LEFT = 9
-MOUTH_RIGHT = 10
-LEFT_SHOULDER = 11
-RIGHT_SHOULDER = 12
-LEFT_ELBOW = 13
-RIGHT_ELBOW = 14
-LEFT_WRIST = 15
-RIGHT_WRIST = 16
-LEFT_PINKY = 17
-RIGHT_PINKY = 18
-LEFT_INDEX = 19
-RIGHT_INDEX = 20
-LEFT_THUMB = 21
-RIGHT_THUMB = 22
-LEFT_HIP = 23
-RIGHT_HIP = 24
-LEFT_KNEE = 25
-RIGHT_KNEE = 26
-LEFT_ANKLE = 27
-RIGHT_ANKLE = 28
-LEFT_HEEL = 29
-RIGHT_HEEL = 30
-LEFT_FOOT_INDEX = 31
-RIGHT_FOOT_INDEX = 32
+## Features
 
-Since I do not particularly care about definite coordianates for each id that makes up the hand (especially because sometimes parts of hands are excluded due to low visibility in each frame), I chose to take the average of visible parts of hands and take it as one coordiante per frame. This way I make up for missing data.
+- **Pose Detection**: Detect body pose landmarks using MediaPipe.
+- **Landmark Filtering**: Exclude low-visibility landmarks and specific unwanted landmarks (e.g., face landmarks).
+- **Frame Skipping**: Process every Nth frame for efficiency.
+- **Landmark Averaging**: Smooth landmark positions by averaging data over multiple frames.
+- **FPS Display**: Show real-time frame processing speed (FPS) on video.
+- **JSON Export**: Save processed landmarks into a structured JSON file for further analysis.
 
-In this example you can see that visibility for IDs: 16,17, and 18 was below the treshold (id.value < 0.65), so I need to average over what i have, so I get the rough coordiantes of both hands
-{
-"id": 15,
-"x": 0.23376888781785965,
-"y": 0.9412336409091949,
-"z": -0.10708843609318137,
-"visibility": 0.6834443390369416
-},
-{
-"id": 19,
-"x": 0.24429382383823395,
-"y": 0.9607700705528259,
-"z": -0.19701384007930756,
-"visibility": 0.6510405540466309
-},
+---
 
-Features
-Pose Detection: Detect body pose landmarks using MediaPipe.
-Landmark Filtering: Exclude low-visibility landmarks and specific unwanted landmarks (e.g., face landmarks).
-Frame Skipping: Process every Nth frame for efficiency.
-Landmark Averaging: Smooth landmark positions by averaging data over multiple frames.
-FPS Display: Show real-time frame processing speed (FPS) on video.
-JSON Export: Save processed landmarks into a structured JSON file for further analysis.
-Prerequisites
-Required Libraries
+## Body Landmark IDs
+
+The following numbers represent IDs for each part of the body, as defined in `pose.py` (MediaPipe library):
+
+| Landmark Name         | ID  | Landmark Name         | ID  |
+|-----------------------|------|-----------------------|------|
+| NOSE                  | 0    | LEFT_HIP             | 23   |
+| LEFT_EYE_INNER        | 1    | RIGHT_HIP            | 24   |
+| LEFT_EYE              | 2    | LEFT_KNEE            | 25   |
+| LEFT_EYE_OUTER        | 3    | RIGHT_KNEE           | 26   |
+| RIGHT_EYE_INNER       | 4    | LEFT_ANKLE           | 27   |
+| RIGHT_EYE             | 5    | RIGHT_ANKLE          | 28   |
+| RIGHT_EYE_OUTER       | 6    | LEFT_HEEL            | 29   |
+| LEFT_EAR              | 7    | RIGHT_HEEL           | 30   |
+| RIGHT_EAR             | 8    | LEFT_FOOT_INDEX      | 31   |
+| MOUTH_LEFT            | 9    | RIGHT_FOOT_INDEX     | 32   |
+| MOUTH_RIGHT           | 10   |                     
+
+> **Note:** Some landmarks, such as the hands, are averaged to account for missing or low-visibility data. Example:
+> 
+> ```json
+> {
+>   "id": 15,
+>   "x": 0.2337,
+>   "y": 0.9412,
+>   "z": -0.1070,
+>   "visibility": 0.6834
+> },
+> {
+>   "id": 19,
+>   "x": 0.2442,
+>   "y": 0.9607,
+>   "z": -0.1970,
+>   "visibility": 0.6510
+> }
+> ```
+
+---
+
+## Prerequisites
+
+### Required Libraries
+
 Ensure you have the following Python libraries installed:
 
-OpenCV: For video processing
-MediaPipe: For pose estimation
-JSON: For data serialization
+- **OpenCV**: For video processing
+- **MediaPipe**: For pose estimation
+- **JSON**: For data serialization
 
-Frame Skipping:
-Modify frame_skip to process every nth frame (default: 2).
+Install them using pip:
+```bash
+pip install opencv-python mediapipe
+```
+
+---
+
+## Configuration
+
+### Frame Skipping
+Adjust `frame_skip` to process every Nth frame (default: 2):
+```python
 frame_skip = 2
+```
 
-Excluded Landmarks:
-Update excluded_landmarks to filter out unwanted pose landmarks (default: face landmarks, indices 0–10).
+### Excluded Landmarks
+Update `excluded_landmarks` to filter out unwanted pose landmarks (default: face landmarks, indices 0–10):
+```python
+excluded_landmarks = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+```
+
+---
+
+## How It Works
+
+1. **Pose Detection**: Detects pose landmarks in each video frame using MediaPipe.
+2. **Filtering**: Excludes landmarks below a visibility threshold (e.g., `visibility < 0.65`).
+3. **Landmark Averaging**: Computes averages for missing or low-visibility landmarks (e.g., hands).
+4. **JSON Export**: Saves processed pose landmarks into a JSON file for analysis.
+
+---
+
+## Currently working on calculating overrealiance on specific joints/limbs
+
+## Contributing
+
+Contributions are welcome! If you have suggestions for improving this project, feel free to fork the repository and submit a pull request.
+
+---
+
